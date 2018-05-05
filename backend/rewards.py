@@ -51,3 +51,16 @@ class Rewards:
         except:
             self.db.rollback()
             return False
+
+    def getReward(self):
+        sql='SELECT * from reward '+';'
+        try:
+            self.cursor.execute(sql)
+            self.db.commit()
+            print("berhasil")
+        except:
+            print("error")
+            self.db.rollback()
+        return  "error"
+
+
