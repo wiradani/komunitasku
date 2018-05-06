@@ -1,15 +1,15 @@
 # komunitasku
 backend app komunitasku using flask python
 
-#Import database ke mysql
+# Import database ke mysql
 
-#### jika terdapat no module mysqldb  :
+# jika terdapat no module mysqldb  :
 1. install modul 
 ```
 $ pip3 install mysqlclient
 ...
-
-#### jalankan flask  :
+```
+# jalankan flask  :
 1. export flask
 ```
 $ export FLASK_APP=app.py
@@ -19,5 +19,6 @@ $ export FLASK_APP=app.py
 ```
 $ flask run
 ```
+
 
 
