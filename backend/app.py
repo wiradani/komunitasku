@@ -1,14 +1,16 @@
 from flask import Flask,request,jsonify
 from user import User
 from rewards import  Rewards
+from komunitas import Komunitas
 
 app = Flask(__name__)
 user = User()
 reward = Rewards()
+Komunitas = Komunitas()
 
 @app.route("/")
 def hello():
-    return "Hello Kampret"
+    return "Hello FLASK is running"
 
 @app.route('/createUser',methods=['POST','GET'])
 def createUser():
@@ -17,12 +19,12 @@ def createUser():
         username = request.form["username"]
         password = request.form["password"]
         email = request.form["email"]
-        daftar_komunitas = request.form["daftar_komunitas"]
-        res = user.createUser(nama,username,password,email,daftar_komunitas)
+        role = request.form["role"]
+        res = user.createUser(nama,username,password,email,role)
         message = {
             'status': 200,
             'message': 'success',
-            'data' : [nama,username,password,email,daftar_komunitas]
+            'data' : [nama,username,password,email,role]
         }
         return jsonify(message)
     else:
@@ -50,13 +52,13 @@ def updateUser():
         username = request.form["username"]
         password = request.form["password"]
         email = request.form["email"]
-        daftar_komunitas = request.form["daftar_komunitas"]
+        role = request.form["role"]
 
-        res = user.updateUser(id_user, nama,username,password,email,daftar_komunitas)
+        res = user.updateUser(id_user, nama,username,password,email,role)
         message = {
             'status': 200,
             'message': 'success',
-            'data' : [id_user,nama,username,password,email,daftar_komunitas]
+            'data' : [id_user,nama,username,password,email,role]
         }
         if res:
             return jsonify(message)
@@ -111,6 +113,25 @@ def updateReward():
             return jsonify(message)
         else:
             return "NO"
+    else:
+        return "must be POST method"
+
+@app.route('/updateKomunitas',methods=['POST','GET'])
+def updateKomunitas():
+    if request.method == "POST":
+        id_komunitas = request.form["id_komunitas"]
+        nama_komunitas = request.form["nama_komunitas"]
+        deskripsi_komunitas = request.form["deskripsi_komunitas"]
+        res = Komunitas.updateKomunitas(id_komunitas,nama_komunitas,deskripsi_komunitas)
+        message = {
+            'status': 200,
+            'message': 'success',
+            'data' : [id_komunitas,nama_komunitas,deskripsi_komunitas]
+        }
+        if res:
+            return jsonify(message)
+        else:
+            return "Ups something wrong"
     else:
         return "must be POST method"
 
