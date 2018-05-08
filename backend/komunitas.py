@@ -27,5 +27,10 @@ class Komunitas:
             self.db.rollback()
             return False
 
+    def getALl(self):
+        sql='select * from komunitas'
+        self.cursor.execute(sql)
+        res = self.cursor.fetchall()
+        return res 
 
 

@@ -135,6 +135,12 @@ def updateKomunitas():
     else:
         return "must be POST method"
 
+@app.route('/getKomunitas',methods=['GET'])
+def getKomunitas():
+    res = Komunitas.getALl()
+    return jsonify(res)
+    
+
 
 
 if __name__ == '__main__':

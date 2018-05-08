@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: May 07, 2018 at 02:48 PM
+-- Generation Time: May 07, 2018 at 04:01 PM
 -- Server version: 10.1.31-MariaDB
 -- PHP Version: 7.2.4
 
@@ -40,6 +40,17 @@ CREATE TABLE `challange` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `daftar_gath`
+--
+
+CREATE TABLE `daftar_gath` (
+  `FK_id_gath` int(11) NOT NULL,
+  `FK_id_user` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `daftar_komunitas`
 --
 
@@ -51,18 +62,28 @@ CREATE TABLE `daftar_komunitas` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `daftar_reward`
+--
+
+CREATE TABLE `daftar_reward` (
+  `FK_id_reward` int(11) NOT NULL,
+  `FK_id_use` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `event`
 --
 
 CREATE TABLE `event` (
   `id_event` int(11) NOT NULL,
   `id_komunitas_FK` int(11) NOT NULL,
-  `id_reward_FK` int(11) NOT NULL,
   `nama_event` varchar(255) NOT NULL,
   `tanggal` date NOT NULL,
   `reward_points` int(10) NOT NULL,
   `reward_xp` int(10) NOT NULL,
-  `tipe` int(10) NOT NULL
+  `tipe` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -72,6 +93,7 @@ CREATE TABLE `event` (
 --
 
 CREATE TABLE `gath` (
+  `id_gath` int(11) NOT NULL,
   `id_event_FK` int(11) NOT NULL,
   `materi` varchar(255) NOT NULL,
   `lokasi` text NOT NULL,
@@ -142,7 +164,7 @@ CREATE TABLE `user` (
   `titile` varchar(255) NOT NULL DEFAULT 'noob',
   `xp` int(255) NOT NULL DEFAULT '0',
   `points` int(255) NOT NULL DEFAULT '0',
-  `role` int(1) NOT NULL
+  `role` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -165,7 +187,15 @@ INSERT INTO `user` (`id_user`, `nama`, `username`, `password`, `email`, `titile`
 -- Indexes for table `challange`
 --
 ALTER TABLE `challange`
-  ADD KEY `id_event_FK` (`id_event_FK`);
+  ADD KEY `id_event_FK` (`id_event_FK`),
+  ADD KEY `pembuat_challagne` (`pembuat_challange`);
+
+--
+-- Indexes for table `daftar_gath`
+--
+ALTER TABLE `daftar_gath`
+  ADD KEY `FK_id_gath` (`FK_id_gath`),
+  ADD KEY `FK_id_user` (`FK_id_user`);
 
 --
 -- Indexes for table `daftar_komunitas`
@@ -175,17 +205,24 @@ ALTER TABLE `daftar_komunitas`
   ADD KEY `id_komunitas_FK` (`id_komunitas_FK`);
 
 --
+-- Indexes for table `daftar_reward`
+--
+ALTER TABLE `daftar_reward`
+  ADD KEY `FK_id_reward` (`FK_id_reward`),
+  ADD KEY `FK_user` (`FK_id_use`);
+
+--
 -- Indexes for table `event`
 --
 ALTER TABLE `event`
   ADD PRIMARY KEY (`id_event`),
-  ADD KEY `id_reward_FK` (`id_reward_FK`),
   ADD KEY `komunitas_FK` (`id_komunitas_FK`);
 
 --
 -- Indexes for table `gath`
 --
 ALTER TABLE `gath`
+  ADD PRIMARY KEY (`id_gath`),
   ADD KEY `FK_ID_Event` (`id_event_FK`);
 
 --
@@ -217,6 +254,12 @@ ALTER TABLE `event`
   MODIFY `id_event` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `gath`
+--
+ALTER TABLE `gath`
+  MODIFY `id_gath` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `komunitas`
 --
 ALTER TABLE `komunitas`
@@ -242,7 +285,15 @@ ALTER TABLE `user`
 -- Constraints for table `challange`
 --
 ALTER TABLE `challange`
-  ADD CONSTRAINT `id_event_FK` FOREIGN KEY (`id_event_FK`) REFERENCES `event` (`id_event`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `id_event_FK` FOREIGN KEY (`id_event_FK`) REFERENCES `event` (`id_event`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `pembuat_challagne` FOREIGN KEY (`pembuat_challange`) REFERENCES `user` (`id_user`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `daftar_gath`
+--
+ALTER TABLE `daftar_gath`
+  ADD CONSTRAINT `FK_id_gath` FOREIGN KEY (`FK_id_gath`) REFERENCES `gath` (`id_gath`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `FK_id_user` FOREIGN KEY (`FK_id_user`) REFERENCES `user` (`id_user`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `daftar_komunitas`
@@ -250,6 +301,13 @@ ALTER TABLE `challange`
 ALTER TABLE `daftar_komunitas`
   ADD CONSTRAINT `id_komunitas_FK` FOREIGN KEY (`id_komunitas_FK`) REFERENCES `komunitas` (`id_komunitas`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `id_user_FK` FOREIGN KEY (`id_user_FK`) REFERENCES `user` (`id_user`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `daftar_reward`
+--
+ALTER TABLE `daftar_reward`
+  ADD CONSTRAINT `FK_id_reward` FOREIGN KEY (`FK_id_reward`) REFERENCES `reward` (`id_reward`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `FK_user` FOREIGN KEY (`FK_id_use`) REFERENCES `user` (`id_user`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `event`
