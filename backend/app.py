@@ -2,16 +2,21 @@ from flask import Flask,request,jsonify
 from user import User
 from rewards import  Rewards
 from komunitas import Komunitas
+from event import Event
 
 app = Flask(__name__)
 user = User()
 reward = Rewards()
 Komunitas = Komunitas()
+event = Event()
 
 @app.route("/")
 def hello():
     return "Hello FLASK is running"
 
+
+
+#POST ROUTE
 @app.route('/createUser',methods=['POST','GET'])
 def createUser():
     if request.method == "POST":
@@ -135,11 +140,48 @@ def updateKomunitas():
     else:
         return "must be POST method"
 
+@app.route('/createEvent',methods=['POST','GET'])
+def createEvent():
+    if request.method == "POST":
+        id_komunitas_FK = request.form["id_komunitas_FK"]
+        nama_event = request.form["nama_event"]
+        reward_points = request.form["reward_points"]
+        reward_xp = request.form["reward_xp"]
+        tipe = request.form["tipe"]
+        res = event.createEvent(id_komunitas_FK,nama_event,reward_points,reward_xp,tipe)
+        message = {
+            'status': 200,
+            'message': 'success',
+            'data' : [id_komunitas_FK,nama_event,reward_points,reward_xp,tipe]
+        }
+        return jsonify(message)
+    else:
+        return "must be POST method"
+
+@app.route('/deleteEvent',methods=['POST','GET'])
+def deleteEvent():
+    if request.method == "POST":
+        id = request.form["id_event"]
+        res = event.deleteEvent(id)
+        message = {
+            'status': 200,
+            'message': 'success',
+        }
+        return jsonify(message)
+    else:
+        return "must be POST method"
+
+#GET ROUTE
 @app.route('/getKomunitas',methods=['GET'])
 def getKomunitas():
     res = Komunitas.getALl()
     return jsonify(res)
-    
+
+
+@app.route('/getUser/<id>',methods=['GET'])
+def getUser(id):
+    res = user.getUser(id)
+    return jsonify(res)
 
 
 

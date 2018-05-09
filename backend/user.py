@@ -58,6 +58,12 @@ class User:
             return False
 
 
+    def getUser(self,id):
+        user_id = str(id)
+        sql='select * from user where id_user="'+id+'"'
+        self.cursor.execute(sql)
+        res = self.cursor.fetchall()
+        return res 
 
 
 
